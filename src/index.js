@@ -6,14 +6,14 @@ const ReactDocRenderer = ({ docs }) => {
   const readmes = docs.filter(({ path }) => readmeRE.test(path))
   const normals = docs.filter(({ path }) => !readmeRE.test(path))
   return (
-    <Fragment>
+    <div className="doc-renderer markdown-body">
       {normals.map(({ component }, key) => {
         return React.createElement(component, { key: `normal-${key}` })
       })}
       {readmes.map(({ component }, key) => {
         return React.createElement(component, { key: `readme-${key}` })
       })}
-    </Fragment>
+    </div>
   )
 }
 
