@@ -6,7 +6,7 @@ const ReactDocRenderer = ({ docs }) => {
   const readmes = docs.filter(({ path }) => readmeRE.test(path))
   const normals = docs.filter(({ path }) => !readmeRE.test(path))
   return (
-    <div className="doc-renderer markdown-body">
+    <div className="doc-renderer markdown-body" style={{ margin: 30 }}>
       {normals.map(({ component }, key) => {
         return React.createElement(component, { key: `normal-${key}` })
       })}
