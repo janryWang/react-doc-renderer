@@ -1,11 +1,15 @@
 import React, { Component } from "react"
 import styled from "styled-components"
 import Sticky from "react-stikky"
+import slugify from "slugify"
 
 const findMinLevel = list => {
-  return list.reduce((min, { level }) => {
-    return level <= min ? level : min
-  }, list[0].level)
+  return list.reduce(
+    (min, { level }) => {
+      return level <= min ? level : min
+    },
+    list[0] ? list[0].level : 1
+  )
 }
 
 const isElementInViewport = (rect, { offset = 0, threshold = 0 } = {}) => {
@@ -43,15 +47,13 @@ export const MenuContent = styled(
       const { dataSource } = this.state
 
       return (
-        <Sticky edge="top" triggerDistance={50}>
+        <Sticky edge="top" triggerDistance={50} zIndex={10}>
           <ul className="menu-list">
             {dataSource.map(({ slug, text }, key) => {
               return (
                 <li
                   key={key}
-                  className={`${
-                    this.state.pathname.indexOf(slug) > -1 ? "active" : ""
-                  }`}
+                  className={`${this.state.pathname === slug ? "active" : ""}`}
                 >
                   <a href={`#${slug}`}>
                     <span>{text}</span>

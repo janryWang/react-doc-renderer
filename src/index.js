@@ -3,16 +3,31 @@ import { MenuContent } from "./menu"
 import PropTypes from "prop-types"
 const readmeRE = /readme.md/i
 
+const toArr = val => (Array.isArray(val) ? val : val ? [val] : [])
+
 const ReactDocRenderer = ({ docs }) => {
-  const readmes = docs.filter(({ path }) => readmeRE.test(path))
-  const normals = docs.filter(({ path }) => !readmeRE.test(path))
+  let max = docs.length + 1000
+  const sortedDocs = toArr(docs).sort(
+    ({ meta: meta_after = {} }, { meta: meta_prev = {} }) => {
+      if (meta_after.index && meta_prev.index) {
+        return meta_after.index - meta_prev.index
+      } else {
+        if (!meta_after.index) {
+          max += 1
+          meta_after.index = max
+        }
+        if (!meta_prev.index) {
+          max += 2
+          meta_prev.index = max
+        }
+        return meta_after.index - meta_prev.index
+      }
+    }
+  )
   return (
     <MenuContent>
       <div className="doc-renderer markdown-body" style={{ margin: 30 }}>
-        {normals.map(({ component }, key) => {
-          return React.createElement(component, { key: `normal-${key}` })
-        })}
-        {readmes.map(({ component }, key) => {
+        {sortedDocs.map(({ component }, key) => {
           return React.createElement(component, { key: `readme-${key}` })
         })}
       </div>
