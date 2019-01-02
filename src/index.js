@@ -1,4 +1,5 @@
 import React, { Fragment } from "react"
+import { MenuContent } from "./menu"
 import PropTypes from "prop-types"
 const readmeRE = /readme.md/i
 
@@ -6,14 +7,16 @@ const ReactDocRenderer = ({ docs }) => {
   const readmes = docs.filter(({ path }) => readmeRE.test(path))
   const normals = docs.filter(({ path }) => !readmeRE.test(path))
   return (
-    <div className="doc-renderer markdown-body" style={{ margin: 30 }}>
-      {normals.map(({ component }, key) => {
-        return React.createElement(component, { key: `normal-${key}` })
-      })}
-      {readmes.map(({ component }, key) => {
-        return React.createElement(component, { key: `readme-${key}` })
-      })}
-    </div>
+    <MenuContent>
+      <div className="doc-renderer markdown-body" style={{ margin: 30 }}>
+        {normals.map(({ component }, key) => {
+          return React.createElement(component, { key: `normal-${key}` })
+        })}
+        {readmes.map(({ component }, key) => {
+          return React.createElement(component, { key: `readme-${key}` })
+        })}
+      </div>
+    </MenuContent>
   )
 }
 
