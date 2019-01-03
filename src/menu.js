@@ -199,10 +199,6 @@ export const MenuContent = styled(
 )`
   display: flex;
   width: 100%;
-  .sticky-container {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
   .menu-list {
     width: 180px;
     min-width: 180px;
