@@ -3,21 +3,16 @@ import styled from "styled-components"
 import Sticky from "react-stikky"
 import slugify from "slugify"
 
-const findMinLevel = list => {
-  return list.reduce(
-    (min, { level }) => {
-      return level <= min ? level : min
-    },
-    list[0] ? list[0].level : 1
-  )
+const toArr = val => {
+  return Array.isArray(val) ? val : val ? [val] : []
 }
 
 const isElementInViewport = (rect, { offset = 0, threshold = 0 } = {}) => {
   const { top, right, bottom, left, width, height } = rect
   const intersection = {
     t: bottom,
-    r: window.innerWidth - left,
-    b: window.innerHeight - top,
+    r: (width > window.innerWidth ? window.innerWidth : width) - left,
+    b: (height > window.innerHeight ? window.innerHeight : height) - top,
     l: right
   }
 
@@ -43,25 +38,42 @@ export const MenuContent = styled(
       pathname: this.getPathName()
     }
 
-    renderMenuList() {
+    renderMenuList(dataSource, root) {
+      const { levels } = this.state
+      return (
+        <ul className={`menu-list ${root ? "root" : ""}`}>
+          {toArr(dataSource).map(({ slug, text, children, level }, key) => {
+            return (
+              <li key={key}>
+                <a
+                  href={`#${slug}`}
+                  className={`${this.state.pathname === slug ? "active" : ""}`}
+                >
+                  <span>{text}</span>
+                </a>
+                {levels.indexOf(level) > -1 && this.renderMenuList(children)}
+              </li>
+            )
+          })}
+        </ul>
+      )
+    }
+
+    renderMenu() {
       const { dataSource } = this.state
 
       return (
-        <Sticky edge="top" triggerDistance={50} zIndex={10}>
-          <ul className="menu-list">
-            {dataSource.map(({ slug, text }, key) => {
-              return (
-                <li
-                  key={key}
-                  className={`${this.state.pathname === slug ? "active" : ""}`}
-                >
-                  <a href={`#${slug}`}>
-                    <span>{text}</span>
-                  </a>
-                </li>
-              )
-            })}
-          </ul>
+        <Sticky
+          edge="top"
+          stickiedStyle={{
+            width: 200,
+            height: "calc(100% - 80px)",
+            overflowY: "auto"
+          }}
+          triggerDistance={50}
+          zIndex={10}
+        >
+          {this.renderMenuList(dataSource, true)}
         </Sticky>
       )
     }
@@ -80,10 +92,61 @@ export const MenuContent = styled(
           }
         }
       )
-      const minLevel = findMinLevel(list)
-      const newList = list.filter(({ level }) => level === minLevel)
+      const parentStack = []
+      let levels = []
+      const checkParent = node => {
+        if (parentStack[parentStack.length - 1]) {
+          if (parentStack[parentStack.length - 1].level >= node.level) {
+            parentStack.pop()
+            return true
+          } else {
+            return false
+          }
+        }
+        return false
+      }
+      const newList = list.reduce((buf, node, index) => {
+        let parent = parentStack[parentStack.length - 1]
+        if (levels.indexOf(node.level) == -1) {
+          levels.push(node.level)
+        }
+        if (parent) {
+          if (parent.level < node.level) {
+            parent.children = parent.children || []
+            parent.children.push(node)
+            parentStack.push(node)
+            return buf
+          } else if (parent.level === node.level) {
+            parentStack.pop()
+            let pre = parentStack[parentStack.length - 1]
+            parentStack.push(node)
+            if (pre) {
+              pre.children = pre.children || []
+              pre.children.push(node)
+              return buf
+            }
+            return buf.concat(node)
+          } else {
+            while (checkParent(node)) {}
+            //parentStack.pop()
+            //parentStack.pop()
+            let prev = parentStack[parentStack.length - 1]
+            parentStack.push(node)
+            if (prev) {
+              prev.children = prev.children || []
+              prev.children.push(node)
+              return buf
+            }
+            return buf.concat(node)
+          }
+        } else {
+          parentStack.push(node)
+        }
+        return buf.concat(node)
+      }, [])
       this.setState({
-        dataSource: newList
+        dataSource: newList,
+        levels: levels.sort((a, b) => a - b).slice(0, 2)
       })
     }
 
@@ -115,6 +178,7 @@ export const MenuContent = styled(
       }
       window.addEventListener("scroll", this.scrollHandler)
       window.addEventListener("hashchange", this.hashChangeHandler)
+      this.scrollHandler()
     }
 
     componentWillUnmount() {
@@ -127,7 +191,7 @@ export const MenuContent = styled(
       return (
         <div ref={this.ref} className={className}>
           <div className="content">{children}</div>
-          {this.renderMenuList()}
+          {this.renderMenu()}
         </div>
       )
     }
@@ -135,30 +199,38 @@ export const MenuContent = styled(
 )`
   display: flex;
   width: 100%;
-
+  .sticky-container {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .menu-list {
     width: 180px;
     min-width: 180px;
     list-style: none;
-    border-left: 1px solid #eee;
-
+    padding: 0;
+    margin: 0;
+    &.root {
+      border-left: 1px solid #eee;
+      position: relative;
+    }
     li {
       line-height: 25px;
       font-size: 14px;
       padding-left: 10px;
       border-left: 3px solid transparent;
       margin-left: -2px;
-      &.active {
-        border-left: 3px solid #2d90ca;
-      }
       a {
         color: #666;
         text-decoration: none;
-        span {
+        display: block;
+        display: block;
+        &.active:before {
+          content: "";
           display: block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          position: absolute;
+          left: -2px;
+          height: 25px;
+          border-left: 3px solid #2d90ca;
         }
       }
     }

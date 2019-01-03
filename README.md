@@ -2,7 +2,7 @@
 
 # react-doc-renderer
 
-### Usage
+# Usage
 
 ```jsx
 import React from 'react'
@@ -16,7 +16,6 @@ const docs = [
 ReactDOM.render(<ReactDocRenderer docs={docs} />, mountNode)
 ```
 
-
 <!-- BLOCK_START : COMPONENT_PROPS :  ./src/index.js -->
 <table class=" PropsTable"><thead><tr><th class="PropsTable--property">Property</th><th class="PropsTable--type">Type</th><th class="PropsTable--required">Required</th><th class="PropsTable--default">Default</th><th width="40%" class="PropsTable--description">Description</th></tr></thead><tbody><tr><td>docs</td><td>Array</td><td>true</td><td><em>-</em></td><td>This is document collection.</td></tr></tbody></table>
 <!-- BLOCK_END -->
@@ -27,7 +26,7 @@ ReactDOM.render(<ReactDocRenderer docs={docs} />, mountNode)
 npm install --save react-doc-renderer
 ```
 
-### LICENSE
+# LICENSE
 
 The MIT License (MIT)
 
