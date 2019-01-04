@@ -11,8 +11,8 @@ const isElementInViewport = (rect, { offset = 0, threshold = 0 } = {}) => {
   const { top, right, bottom, left, width, height } = rect
   const intersection = {
     t: bottom,
-    r: window.innerWidth - left,
-    b: window.innerHeight - top,
+    r: (width > window.innerWidth ? window.innerWidth : width) - left,
+    b: (height > window.innerHeight ? window.innerHeight : height) - top,
     l: right
   }
 
