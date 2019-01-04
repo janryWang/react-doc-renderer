@@ -35,6 +35,7 @@ export const MenuContent = styled(
 
     state = {
       dataSource: [],
+      levels: [],
       pathname: this.getPathName()
     }
 
@@ -128,8 +129,6 @@ export const MenuContent = styled(
             return buf.concat(node)
           } else {
             while (checkParent(node)) {}
-            //parentStack.pop()
-            //parentStack.pop()
             let prev = parentStack[parentStack.length - 1]
             parentStack.push(node)
             if (prev) {
@@ -160,10 +159,28 @@ export const MenuContent = styled(
       })
     }
 
+    traverseDataSource = callback => {
+      const { dataSource } = this.state
+      const traverse = list => {
+        toArr(list).forEach((node, i) => {
+          callback(node, i)
+          if (node.children) {
+            traverse(node.children)
+          }
+        })
+      }
+
+      traverse(dataSource)
+    }
+
     scrollHandler = () => {
+      const { levels } = this.state
       requestAnimationFrame(() => {
-        this.state.dataSource.forEach(({ el, slug }) => {
-          if (isElementInViewport(el.getBoundingClientRect())) {
+        this.traverseDataSource(({ el, slug, level }) => {
+          if (
+            levels.indexOf(level) > -1 &&
+            isElementInViewport(el.getBoundingClientRect())
+          ) {
             this.setState({
               pathname: slug
             })
