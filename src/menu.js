@@ -79,6 +79,12 @@ export const MenuContent = styled(
       )
     }
 
+    changeAnchorBehavior(element) {
+      element.querySelectorAll(".react-demo-a").forEach(el => {
+        if (!el.target) el.target = "_blank"
+      })
+    }
+
     loadDataSource(element) {
       const list = Array.prototype.map.call(
         element.querySelectorAll("h1,h2,h3,h4,h5"),
@@ -192,6 +198,7 @@ export const MenuContent = styled(
     componentDidMount() {
       if (this.ref && this.ref.current) {
         this.loadDataSource(this.ref.current)
+        this.changeAnchorBehavior(this.ref.current)
       }
       window.addEventListener("scroll", this.scrollHandler)
       window.addEventListener("hashchange", this.hashChangeHandler)
