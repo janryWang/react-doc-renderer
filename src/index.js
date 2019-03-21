@@ -30,7 +30,10 @@ const ReactDocRenderer = ({ docs }) => {
     })
   return (
     <MenuContent>
-      <div className="doc-renderer markdown-body" style={{ margin: 30 }}>
+      <div
+        className="doc-renderer markdown-body site-body"
+        style={{ margin: 30 }}
+      >
         {sortedDocs.map(({ component }, key) => {
           return React.createElement(component, { key: `readme-${key}` })
         })}
