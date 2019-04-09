@@ -1,5 +1,5 @@
 import React, { Fragment } from "react"
-import { MenuContent } from "./menu"
+import Elevator from "./elevator"
 import PropTypes from "prop-types"
 const readmeRE = /readme.md/i
 
@@ -29,7 +29,7 @@ const ReactDocRenderer = ({ docs }) => {
       }
     })
   return (
-    <MenuContent>
+    <Elevator>
       <div
         className="doc-renderer markdown-body site-body"
         style={{ margin: 30 }}
@@ -38,7 +38,7 @@ const ReactDocRenderer = ({ docs }) => {
           return React.createElement(component, { key: `readme-${key}` })
         })}
       </div>
-    </MenuContent>
+    </Elevator>
   )
 }
 

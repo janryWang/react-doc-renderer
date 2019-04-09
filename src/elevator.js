@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import styled from "styled-components"
 import Sticky from "react-stikky"
-import slugify from "slugify"
 
 const toArr = val => {
   return Array.isArray(val) ? val : val ? [val] : []
@@ -29,8 +28,8 @@ const isElementInViewport = (rect, { offset = 0, threshold = 0 } = {}) => {
   )
 }
 
-export const MenuContent = styled(
-  class MenuContent extends Component {
+export default styled(
+  class Elevator extends Component {
     ref = React.createRef()
 
     state = {
@@ -66,12 +65,15 @@ export const MenuContent = styled(
       return (
         <Sticky
           edge="top"
+          className="right-menu-wrapper"
+          style={{
+            marginTop: 50
+          }}
           stickiedStyle={{
             width: 200,
             height: "calc(100% - 80px)",
             overflowY: "auto"
           }}
-          triggerDistance={50}
           zIndex={10}
         >
           {this.renderMenuList(dataSource, true)}
@@ -195,10 +197,24 @@ export const MenuContent = styled(
       })
     }
 
+    initialDataSource = () => {
+      this.loadDataSource(this.ref.current)
+      this.changeAnchorBehavior(this.ref.current)
+    }
+
     componentDidMount() {
       if (this.ref && this.ref.current) {
-        this.loadDataSource(this.ref.current)
-        this.changeAnchorBehavior(this.ref.current)
+        const content = this.ref.current.querySelector(".content")
+        const childs = content.querySelectorAll('*[class^="react-demo"]')
+        if (childs && childs.length) {
+          this.initialDataSource()
+        } else {
+          content.addEventListener(
+            "DOMSubtreeModified",
+            this.initialDataSource,
+            false
+          )
+        }
       }
       window.addEventListener("scroll", this.scrollHandler)
       window.addEventListener("hashchange", this.hashChangeHandler)
@@ -208,6 +224,14 @@ export const MenuContent = styled(
     componentWillUnmount() {
       window.removeEventListener("scroll", this.scrollHandler)
       window.removeEventListener("hashchange", this.hashChangeHandler)
+      if (this.ref && this.ref.current) {
+        const content = this.ref.current.querySelector(".content")
+        content.removeEventListener(
+          "DOMSubtreeModified",
+          this.initialDataSource,
+          false
+        )
+      }
     }
 
     render() {
@@ -257,10 +281,14 @@ export const MenuContent = styled(
   }
   .content {
     flex-shrink: 3;
+    margin-right: 20px;
     width: calc(100% - 240px);
   }
+  .right-menu-wrapper {
+    width: 180px !important;
+  }
   @media (max-width: 860px) {
-    .sticky-wrapper {
+    .right-menu-wrapper {
       display: none;
     }
     .content {
