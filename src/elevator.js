@@ -253,6 +253,10 @@ export default styled(
     list-style: none;
     padding: 0;
     margin: 0;
+    .menu-list {
+      width: auto !important;
+      min-width: auto !important;
+    }
     &.root {
       border-left: 1px solid #eee;
       position: relative;
