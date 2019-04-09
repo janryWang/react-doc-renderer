@@ -29,13 +29,15 @@ const ReactDocRenderer = ({ docs }) => {
       }
     })
   return (
-    <Elevator>
-      <div className="doc-renderer markdown-body site-body">
-        {sortedDocs.map(({ component }, key) => {
-          return React.createElement(component, { key: `readme-${key}` })
-        })}
-      </div>
-    </Elevator>
+    <div style={{ margin: 30 }}>
+      <Elevator>
+        <div className="doc-renderer markdown-body site-body">
+          {sortedDocs.map(({ component }, key) => {
+            return React.createElement(component, { key: `readme-${key}` })
+          })}
+        </div>
+      </Elevator>
+    </div>
   )
 }
 
