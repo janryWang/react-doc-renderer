@@ -70,7 +70,6 @@ export default styled(
             marginTop: 50
           }}
           stickiedStyle={{
-            width: 200,
             height: "calc(100% - 80px)",
             overflowY: "auto"
           }}
@@ -286,7 +285,7 @@ export default styled(
   .content {
     flex-shrink: 3;
     margin-right: 20px;
-    width: calc(100% - 240px);
+    width: calc(100% - 100px);
   }
   .right-menu-wrapper {
     width: 180px !important;

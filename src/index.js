@@ -29,7 +29,7 @@ const ReactDocRenderer = ({ docs }) => {
       }
     })
   return (
-    <div style={{ margin: 30 }}>
+    <div style={{ margin: "30px 20px" }}>
       <Elevator>
         <div className="doc-renderer markdown-body site-body">
           {sortedDocs.map(({ component }, key) => {
