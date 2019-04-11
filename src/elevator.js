@@ -289,6 +289,7 @@ export default styled(
   }
   .right-menu-wrapper {
     width: 180px !important;
+    min-width: 180px !important;
   }
   @media (max-width: 860px) {
     .right-menu-wrapper {
