@@ -285,7 +285,7 @@ export default styled(
   .content {
     flex-shrink: 3;
     margin-right: 20px;
-    width: calc(100% - 100px);
+    width: calc(100% - 180px);
   }
   .right-menu-wrapper {
     width: 180px !important;
