@@ -5,6 +5,20 @@ const readmeRE = /readme.md/i
 
 const toArr = val => (Array.isArray(val) ? val : val ? [val] : [])
 
+if (window.parent) {
+  document.addEventListener("click", e => {
+    if (e.target.tagName == "A" || e.target.tagName == "a") {
+      if (
+        e.target.pathname === window.location.pathname &&
+        e.target.hash.indexOf("#/") > -1
+      ) {
+        e.preventDefault()
+        window.top.postMessage({ type: "click", url: e.target.hash }, "*")
+      }
+    }
+  })
+}
+
 const ReactDocRenderer = ({ docs }) => {
   let max = docs.length + 1000
   const sortedDocs = toArr(docs)
