@@ -82,8 +82,7 @@ export default styled(
 
     changeAnchorBehavior(element) {
       element.querySelectorAll(".react-demo-a").forEach(el => {
-        if (el && !el.target && el.herf && el.herf.indexOf("#") == -1)
-          el.target = "_blank"
+        if (!el.target && el.href.indexOf("#") == -1) el.target = "_blank"
       })
     }
 
